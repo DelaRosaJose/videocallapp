@@ -1,11 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:videocallapp/data/services/signaling_firebase_service.dart';
+import 'package:videocallapp/firebase_options.dart';
 import 'features/call/cubit/call_cubit.dart';
 import 'features/call/view/lobby_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
 class MyApp extends StatelessWidget {
@@ -13,16 +17,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CallCubit>(
-      create: (context) => CallCubit(),
+    return MultiBlocProvider(
+      providers: [
+        RepositoryProvider(create: (_) => SignalingFirebaseService()),
+      ],
+      child: BlocProvider<CallCubit>(
+        create: (context) =>
+            CallCubit(context.read<SignalingFirebaseService>()),
 
-      child: MaterialApp(
-        title: 'Video Call App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+        child: MaterialApp(
+          title: 'Video Call App',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: const LobbyScreen(),
         ),
-        home: const LobbyScreen(),
       ),
     );
   }
