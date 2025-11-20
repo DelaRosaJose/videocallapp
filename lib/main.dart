@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:videocallapp/features/call/view/lobby_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/call/cubit/call_cubit.dart';
+import 'features/call/view/lobby_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,14 +11,19 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.blue)),
-      home: const LobbyScreen(),
+    return BlocProvider<CallCubit>(
+      create: (context) => CallCubit(),
+
+      child: MaterialApp(
+        title: 'Video Call App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const LobbyScreen(),
+      ),
     );
   }
 }

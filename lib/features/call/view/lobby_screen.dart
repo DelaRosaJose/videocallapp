@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:videocallapp/features/call/cubit/call_cubit.dart';
 import '../../../shared_widgets/custom_button.dart';
 import '../../../shared_widgets/custom_text_field.dart';
 
@@ -34,7 +36,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
             ),
             const SizedBox(height: 40),
 
-            CustomButton(text: 'Crear Llamada', onPressed: () {}),
+            CustomButton(
+              text: 'Crear Llamada',
+              onPressed: () {
+                context.read<CallCubit>().createCall();
+              },
+              color: Colors.blue,
+            ),
 
             const SizedBox(height: 40),
             const Text('O'),
