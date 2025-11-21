@@ -116,7 +116,13 @@ class CallCubit extends Cubit<CallState> {
     };
 
     _peerConnection!.onConnectionState = (state) {
-      if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
+      if (this.state is CallInProgress) {
+        emit((this.state as CallInProgress).copyWith(connectionState: state));
+      }
+
+      if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected ||
+          state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
+        Future.delayed(Duration(seconds: 10));
         hangUp();
       }
     };
@@ -132,7 +138,7 @@ class CallCubit extends Cubit<CallState> {
 
   Future<void> hangUp() async {
     await _roomSubscription?.cancel();
-    // 1. Detener tracks locales
+    // Detener tracks locales
     _localStream?.getTracks().forEach((track) {
       track.stop();
     });
@@ -156,7 +162,7 @@ class CallCubit extends Cubit<CallState> {
       _roomID = roomId;
       _isCaller = false;
 
-      // 1. Verificar si la sala existe y obtener la Oferta
+      //Verificar si la sala existe y obtener la Oferta
       final roomData = await _signalingService.getRoom(roomId);
       if (roomData == null) {
         emit(const CallFailure("La sala no existe"));

@@ -19,6 +19,7 @@ class CallInProgress extends CallState {
   final bool isSwapped;
   final bool isFrontCamera;
   final bool isMuted;
+  final RTCPeerConnectionState connectionState;
 
   const CallInProgress({
     required this.localRenderer,
@@ -27,6 +28,8 @@ class CallInProgress extends CallState {
     this.isSwapped = false,
     this.isFrontCamera = true,
     this.isMuted = false,
+    this.connectionState =
+        RTCPeerConnectionState.RTCPeerConnectionStateConnecting,
   });
 
   CallInProgress copyWith({
@@ -36,6 +39,7 @@ class CallInProgress extends CallState {
     bool? isSwapped,
     bool? isFrontCamera,
     bool? isMuted,
+    RTCPeerConnectionState? connectionState,
   }) {
     return CallInProgress(
       localRenderer: localRenderer ?? this.localRenderer,
@@ -44,6 +48,7 @@ class CallInProgress extends CallState {
       isSwapped: isSwapped ?? this.isSwapped,
       isFrontCamera: isFrontCamera ?? this.isFrontCamera,
       isMuted: isMuted ?? this.isMuted,
+      connectionState: connectionState ?? this.connectionState,
     );
   }
 }
