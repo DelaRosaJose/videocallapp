@@ -1,7 +1,7 @@
-import 'dart:io';
-
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Para el portapapeles
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:videocallapp/features/call/cubit/call_cubit.dart';
@@ -9,6 +9,13 @@ import 'package:videocallapp/features/call/cubit/call_state.dart';
 
 class CallScreen extends StatelessWidget {
   const CallScreen({super.key});
+
+  bool get _isMobile {
+    if (kIsWeb) {
+      return false; // Si es Web, no accedemos a Platform
+    }
+    return Platform.isAndroid || Platform.isIOS;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +136,16 @@ class CallScreen extends StatelessWidget {
                     children: [
                       FloatingActionButton(
                         heroTag: "mute_btn",
-                        backgroundColor: Colors.white24,
-                        onPressed: () {},
-                        child: const Icon(Icons.mic, color: Colors.white),
+                        backgroundColor: state.isMuted
+                            ? Colors.white
+                            : Colors.white24,
+                        onPressed: () {
+                          context.read<CallCubit>().toggleMute();
+                        },
+                        child: Icon(
+                          state.isMuted ? Icons.mic_off : Icons.mic,
+                          color: state.isMuted ? Colors.black : Colors.white,
+                        ),
                       ),
 
                       FloatingActionButton(
@@ -143,7 +157,7 @@ class CallScreen extends StatelessWidget {
                         child: const Icon(Icons.call_end, color: Colors.white),
                       ),
 
-                      if (Platform.isAndroid || Platform.isIOS)
+                      if (_isMobile)
                         FloatingActionButton(
                           heroTag: "switch_camera_btn",
                           backgroundColor: Colors.white24,

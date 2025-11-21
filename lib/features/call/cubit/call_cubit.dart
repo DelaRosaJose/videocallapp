@@ -276,4 +276,21 @@ class CallCubit extends Cubit<CallState> {
       }
     }
   }
+
+  void toggleMute() {
+    if (_localStream != null) {
+      var audioTracks = _localStream!.getAudioTracks();
+
+      if (audioTracks.isNotEmpty) {
+        final track = audioTracks[0];
+
+        track.enabled = !track.enabled;
+
+        if (state is CallInProgress) {
+          final currentState = state as CallInProgress;
+          emit(currentState.copyWith(isMuted: !track.enabled));
+        }
+      }
+    }
+  }
 }

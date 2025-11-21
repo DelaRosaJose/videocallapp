@@ -18,6 +18,7 @@ class CallInProgress extends CallState {
   final String roomId;
   final bool isSwapped;
   final bool isFrontCamera;
+  final bool isMuted;
 
   const CallInProgress({
     required this.localRenderer,
@@ -25,6 +26,7 @@ class CallInProgress extends CallState {
     required this.roomId,
     this.isSwapped = false,
     this.isFrontCamera = true,
+    this.isMuted = false,
   });
 
   CallInProgress copyWith({
@@ -33,6 +35,7 @@ class CallInProgress extends CallState {
     String? roomId,
     bool? isSwapped,
     bool? isFrontCamera,
+    bool? isMuted,
   }) {
     return CallInProgress(
       localRenderer: localRenderer ?? this.localRenderer,
@@ -40,6 +43,7 @@ class CallInProgress extends CallState {
       roomId: roomId ?? this.roomId,
       isSwapped: isSwapped ?? this.isSwapped,
       isFrontCamera: isFrontCamera ?? this.isFrontCamera,
+      isMuted: isMuted ?? this.isMuted,
     );
   }
 }
