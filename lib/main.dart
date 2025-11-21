@@ -8,8 +8,9 @@ import 'features/call/view/lobby_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

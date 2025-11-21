@@ -37,4 +37,33 @@ class SignalingFirebaseService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>?> getRoom(String roomId) async {
+    final doc = await _firestore.collection('rooms').doc(roomId).get();
+    if (doc.exists) {
+      return doc.data();
+    }
+    return null;
+  }
+
+  Future<void> sendAnswer(String roomId, Map<String, dynamic> answer) async {
+    await _firestore.collection('rooms').doc(roomId).update({'sdp': answer});
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getRoomStream(String roomId) {
+    return _firestore.collection('rooms').doc(roomId).snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getCandidatesStream({
+    required String roomId,
+    required bool isCaller,
+  }) {
+    final collectionName = isCaller ? 'guestCandidates' : 'callerCandidates';
+
+    return _firestore
+        .collection('rooms')
+        .doc(roomId)
+        .collection(collectionName)
+        .snapshots();
+  }
 }
