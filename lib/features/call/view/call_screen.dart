@@ -23,11 +23,18 @@ class CallScreen extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is CallInProgress) {
+            final mainRenderer = state.isSwapped
+                ? state.localRenderer
+                : state.remoteRenderer;
+            final smallRenderer = state.isSwapped
+                ? state.remoteRenderer
+                : state.localRenderer;
+
             return Stack(
               children: [
                 Positioned.fill(
                   child: RTCVideoView(
-                    state.remoteRenderer,
+                    mainRenderer,
                     objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                   ),
                 ),
@@ -35,7 +42,6 @@ class CallScreen extends StatelessWidget {
                 Positioned(
                   top: 40,
                   left: 20,
-                  right: 20,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -83,24 +89,30 @@ class CallScreen extends StatelessWidget {
                 Positioned(
                   right: 20,
                   bottom: 100,
-                  child: Container(
-                    height: 160,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white, width: 2),
-                      boxShadow: const [
-                        BoxShadow(color: Colors.black45, blurRadius: 10),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: RTCVideoView(
-                        state.localRenderer,
-                        mirror: true,
-                        objectFit:
-                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => context.read<CallCubit>().toggleCameraView(),
+                      child: Container(
+                        height: 160,
+                        width: 110,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black45, blurRadius: 10),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: RTCVideoView(
+                            smallRenderer,
+                            mirror: true,
+                            objectFit: RTCVideoViewObjectFit
+                                .RTCVideoViewObjectFitCover,
+                          ),
+                        ),
                       ),
                     ),
                   ),

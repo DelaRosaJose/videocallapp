@@ -113,22 +113,21 @@ class CallCubit extends Cubit<CallState> {
       if (event.streams.isNotEmpty) {
         _remoteRenderer.srcObject = event.streams[0];
       }
-
-      _peerConnection!.onConnectionState = (state) {
-        if (state ==
-            RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
-          hangUp();
-        }
-      };
-
-      emit(
-        CallInProgress(
-          localRenderer: _localRenderer,
-          remoteRenderer: _remoteRenderer,
-          roomId: _roomID!,
-        ),
-      );
     };
+
+    _peerConnection!.onConnectionState = (state) {
+      if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
+        hangUp();
+      }
+    };
+
+    emit(
+      CallInProgress(
+        localRenderer: _localRenderer,
+        remoteRenderer: _remoteRenderer,
+        roomId: _roomID!,
+      ),
+    );
   }
 
   Future<void> hangUp() async {
@@ -141,6 +140,7 @@ class CallCubit extends Cubit<CallState> {
     // Cerramos la conexión
     await _peerConnection?.close();
     _peerConnection = null;
+    _peerConnection?.dispose();
 
     //Limpiamos los Streams
     _localRenderer.srcObject = null;
@@ -249,5 +249,12 @@ class CallCubit extends Cubit<CallState> {
             }
           }
         });
+  }
+
+  void toggleCameraView() {
+    final currentState = state;
+    if (currentState is CallInProgress) {
+      emit(currentState.copyWith(isSwapped: !currentState.isSwapped));
+    }
   }
 }
