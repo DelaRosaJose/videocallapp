@@ -257,4 +257,23 @@ class CallCubit extends Cubit<CallState> {
       emit(currentState.copyWith(isSwapped: !currentState.isSwapped));
     }
   }
+
+  Future<void> switchMobileCamera() async {
+    if (_localStream != null) {
+      try {
+        final videoTrack = _localStream!.getVideoTracks().first;
+
+        await Helper.switchCamera(videoTrack);
+
+        if (state is CallInProgress) {
+          final currentState = state as CallInProgress;
+          emit(
+            currentState.copyWith(isFrontCamera: !currentState.isFrontCamera),
+          );
+        }
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
 }

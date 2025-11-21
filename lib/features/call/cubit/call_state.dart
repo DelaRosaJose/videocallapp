@@ -17,26 +17,29 @@ class CallInProgress extends CallState {
   final RTCVideoRenderer remoteRenderer;
   final String roomId;
   final bool isSwapped;
+  final bool isFrontCamera;
 
   const CallInProgress({
     required this.localRenderer,
     required this.remoteRenderer,
     required this.roomId,
     this.isSwapped = false,
+    this.isFrontCamera = true,
   });
 
-  // Permite actualizar el estado de isSwapped sin cambiar los demas valores.
   CallInProgress copyWith({
     RTCVideoRenderer? localRenderer,
     RTCVideoRenderer? remoteRenderer,
     String? roomId,
     bool? isSwapped,
+    bool? isFrontCamera,
   }) {
     return CallInProgress(
       localRenderer: localRenderer ?? this.localRenderer,
       remoteRenderer: remoteRenderer ?? this.remoteRenderer,
       roomId: roomId ?? this.roomId,
       isSwapped: isSwapped ?? this.isSwapped,
+      isFrontCamera: isFrontCamera ?? this.isFrontCamera,
     );
   }
 }

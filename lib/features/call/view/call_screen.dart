@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Para el portapapeles
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,16 +143,18 @@ class CallScreen extends StatelessWidget {
                         child: const Icon(Icons.call_end, color: Colors.white),
                       ),
 
-                      // Botón Cambiar Cámara (Opcional)
-                      FloatingActionButton(
-                        heroTag: "switch_camera_btn",
-                        backgroundColor: Colors.white24,
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.cameraswitch,
-                          color: Colors.white,
+                      if (Platform.isAndroid || Platform.isIOS)
+                        FloatingActionButton(
+                          heroTag: "switch_camera_btn",
+                          backgroundColor: Colors.white24,
+                          onPressed: () {
+                            context.read<CallCubit>().switchMobileCamera();
+                          },
+                          child: const Icon(
+                            Icons.cameraswitch,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
