@@ -2,5 +2,44 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
-  }
-}
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "yourvideocallvideo",
+          "appId": "1:1036782783280:android:ed75905df02acf505016f5",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "yourvideocallvideo",
+          "appId": "1:1036782783280:ios:d2f5402a478622445016f5",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "yourvideocallvideo",
+          "appId": "1:1036782783280:ios:d2f5402a478622445016f5",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "yourvideocallvideo",
+          "configurations": {
+            "android": "1:1036782783280:android:ed75905df02acf505016f5",
+            "ios": "1:1036782783280:ios:d2f5402a478622445016f5",
+            "macos": "1:1036782783280:ios:d2f5402a478622445016f5",
+            "web": "1:1036782783280:web:0245e437d491e1c75016f5",
+            "windows": "1:1036782783280:web:2b2e23532745e58b5016f5"
+          }
+        }
+      }
+    }
+  },
+ "hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]}}
