@@ -25,6 +25,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CallCubit, CallState>(
+      listenWhen: (previous, current) {
+        return previous is! CallInProgress && current is CallInProgress;
+      },
       listener: (context, state) {
         if (state is CallInProgress) {
           Navigator.push(

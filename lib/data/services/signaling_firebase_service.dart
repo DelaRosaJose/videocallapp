@@ -66,4 +66,31 @@ class SignalingFirebaseService {
         .collection(collectionName)
         .snapshots();
   }
+
+  Future<void> deleteRoom(String roomId) async {
+    try {
+      final roomRef = _firestore.collection('rooms').doc(roomId);
+
+      final callerCandidates = await roomRef
+          .collection('callerCandidates')
+          .get();
+      final guestCandidates = await roomRef.collection('guestCandidates').get();
+
+      WriteBatch batch = _firestore.batch();
+
+      for (var doc in callerCandidates.docs) {
+        batch.delete(doc.reference);
+      }
+
+      for (var doc in guestCandidates.docs) {
+        batch.delete(doc.reference);
+      }
+
+      batch.delete(roomRef);
+
+      await batch.commit();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

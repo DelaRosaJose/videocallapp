@@ -122,7 +122,6 @@ class CallCubit extends Cubit<CallState> {
 
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected ||
           state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
-        Future.delayed(Duration(seconds: 10));
         hangUp();
       }
     };
@@ -137,11 +136,22 @@ class CallCubit extends Cubit<CallState> {
   }
 
   Future<void> hangUp() async {
+    if (state is CallInitial) return;
+
     await _roomSubscription?.cancel();
+    await _candidatesSubscription?.cancel();
     // Detener tracks locales
     _localStream?.getTracks().forEach((track) {
       track.stop();
     });
+
+    if (_isCaller && _roomID != null) {
+      try {
+        await _signalingService.deleteRoom(_roomID!);
+      } catch (e) {
+        rethrow;
+      }
+    }
 
     // Cerramos la conexión
     await _peerConnection?.close();
